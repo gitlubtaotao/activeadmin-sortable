@@ -1,24 +1,31 @@
 //= require jquery-ui
 
-(function($) {
-  $(document).ready(function() {
-    $('.handle').closest('tbody').activeAdminSortable();
-  });
-
-  $.fn.activeAdminSortable = function() {
-    this.sortable({
-      update: function(event, ui) {
-        var url = ui.item.find('[data-sort-url]').data('sort-url');
-
-        $.ajax({
-          url: url,
-          type: 'post',
-          data: { position: ui.item.index() + 1 },
-          success: function() { window.location.reload() }
+(function ($) {
+    $(document).ready(function () {
+        $('.handle').closest('tbody').activeAdminSortable();
+        $positionAarry = [];
+        //进行数据倒序
+        var length = $(".handle").each(function (index,value) {
+            $positionAarry[index] = $(this).attr('position');
+            console.log($positionAarry);
         });
-      }
     });
-
-    this.disableSelection();
-  }
+    $.fn.activeAdminSortable = function () {
+        this.sortable({
+            update: function (event, ui) {
+                var url = ui.item.find('[data-sort-url]').data('sort-url');
+                var item = ui.item.index();
+                var position = $positionAarry[item];
+                $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: {position: position},
+                    success: function () {
+                        window.location.reload()
+                    }
+                });
+            }
+        });
+        this.disableSelection();
+    }
 })(jQuery);
